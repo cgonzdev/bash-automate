@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Version: v0.0.1
+# Version: v0.0.2
 # Author: cgonzdev
 # Creation date: 2023-03-13
 
@@ -16,22 +16,18 @@ csv_file=$FILE
 # Get website HTML file
 html=$(curl -s $url)
 
-# Calculate MD5 and SHA256 hash of HTML
-md5=$(echo -n "$html" | openssl md5 | cut -d ' ' -f 2)
-sha256=$(echo -n "$html" | openssl sha256 | cut -d ' ' -f 2)
+# Calculate SHA512 hash of HTML
+sha512=$(echo -n "$html" | openssl sha512 | cut -d ' ' -f 2)
 
-# Get latest MD5 and SHA256 values ​​from CSV file
-last_md5=$(tail -n 1 $csv_file | cut -d ',' -f 3)
-last_sha256=$(tail -n 1 $csv_file | cut -d ',' -f 4)
+# Get latest SHA512 value ​​from CSV file
+last_sha512=$(tail -n 1 $csv_file | cut -d ',' -f 3)
 
-# Compare the calculated hashes with the last values ​​of the CSV file
-echo $sha256
-echo $last_sha256
-if [ "$md5" != "$last_md5" ] || [ "$sha256" != "$last_sha256" ]; then
+# Compare the calculated hash with the last value ​​of the CSV file
+if [ "$sha512" != "$last_sha512" ]; then
     echo "The hashes don't match for $url"
 else
     echo "The hashes match for $url"
 fi
 
-# Store the new MD5 and SHA256 values ​​in the CSV file
-echo "$current_date,$url,$md5,$sha256" >> $csv_file
+# Store the new SHA512 value ​​in the CSV file
+echo "$current_date,$url,$sha512" >> $csv_file
